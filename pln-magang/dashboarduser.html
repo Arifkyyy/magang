@@ -1073,14 +1073,28 @@
     // Override saveProfile to use API
     window.saveProfile = async function() {
       const data = {};
+      const nameEl = document.getElementById('profileName');
+      const usernameEl = document.getElementById('profUsername');
       const emailEl = document.getElementById('profEmail');
       const instansiEl = document.getElementById('profInstansi');
+
+      // Prefer explicit name input if present, otherwise derive from username field
+      if (nameEl && (nameEl.tagName === 'INPUT' || nameEl.tagName === 'TEXTAREA')) {
+        data.name = nameEl.value.trim();
+      } else if (usernameEl) {
+        const raw = usernameEl.value || '';
+        const cleaned = raw.replace(/[_\.\-]/g, ' ').replace(/\s+/g, ' ').trim();
+        data.name = cleaned.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      }
+
       if(emailEl) data.email = emailEl.value;
       if(instansiEl) data.instansi = instansiEl.value;
 
       const res = await AuthAPI.updateProfile(data);
       if(res && res.success) {
         showToast('Profil berhasil diperbarui!', 'success');
+        // Refresh local UI from stored profile
+        try { await loadUserProfileData(); } catch(e) { /* ignore */ }
       } else {
         showToast(res ? res.message : 'Gagal update', 'error');
       }
