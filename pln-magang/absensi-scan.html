@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absensi - PLN ICON+</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0a4a7a 0%, #0a6599 50%, #4db8e8 100%);
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px 32px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      animation: slideUp 0.5s ease;
+    }
+    @keyframes slideUp {
+      from { opacity:0; transform:translateY(30px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    .icon {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 40px;
+    }
+    .icon.loading { background: #f0f9ff; }
+    .icon.success { background: #f0fdf4; }
+    .icon.error { background: #fef2f2; }
+    .icon.login { background: #f0f9ff; }
+
+    h2 { font-size: 20px; color: #1e293b; margin-bottom: 8px; }
+    p { font-size: 14px; color: #64748b; margin-bottom: 20px; line-height: 1.5; }
+    .time { font-size: 28px; font-weight: 700; color: #0a6599; margin: 12px 0; }
+    .date { font-size: 13px; color: #94a3b8; margin-bottom: 16px; }
+    .name { font-size: 16px; font-weight: 600; color: #334155; background: #f8fafc; padding: 10px 16px; border-radius: 10px; margin: 12px 0; }
+
+    .spinner {
+      width: 48px; height: 48px;
+      border: 4px solid #e2e8f0;
+      border-top-color: #0a6599;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: #0a6599; color: #fff; }
+    .btn-primary:hover { background: #085280; }
+    .btn-outline { background: transparent; color: #0a6599; border: 1.5px solid #0a6599; margin-left: 8px; }
+
+    /* Login form */
+    .login-form { text-align: left; margin-top: 16px; }
+    .login-form label { display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px; }
+    .login-form input {
+      width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 10px;
+      font-size: 14px; margin-bottom: 12px; outline: none; transition: border-color 0.2s;
+    }
+    .login-form input:focus { border-color: #0a6599; }
+    .login-form .btn { width: 100%; padding: 14px; font-size: 15px; }
+    .err-msg { color: #ef4444; font-size: 13px; margin-bottom: 10px; display: none; }
+  </style>
+</head>
+<body>
+  <div class="card" id="mainCard">
+    <!-- Loading state (default) -->
+    <div id="stateLoading">
+      <div class="icon loading"><div class="spinner"></div></div>
+      <h2>Memproses Absensi...</h2>
+      <p>Mohon tunggu sebentar</p>
+    </div>
+
+    <!-- Success state -->
+    <div id="stateSuccess" style="display:none">
+      <div class="icon success">✅</div>
+      <h2>Absensi Berhasil!</h2>
+      <div class="name" id="userName"></div>
+      <div class="time" id="jamMasuk"></div>
+      <div class="date" id="tanggal"></div>
+      <p>Absensi kamu sudah tercatat. Selamat bekerja! 💪</p>
+      <a href="dashboarduser.html" class="btn btn-primary">Buka Dashboard</a>
+    </div>
+
+    <!-- Error state -->
+    <div id="stateError" style="display:none">
+      <div class="icon error">❌</div>
+      <h2 id="errorTitle">Gagal Absensi</h2>
+      <p id="errorMsg">Terjadi kesalahan.</p>
+      <a href="dashboarduser.html" class="btn btn-primary">Buka Dashboard</a>
+      <a href="javascript:location.reload()" class="btn btn-outline">Coba Lagi</a>
+    </div>
+
+    <!-- Login state (not logged in) -->
+    <div id="stateLogin" style="display:none">
+      <div class="icon login">🔐</div>
+      <h2>Login untuk Absensi</h2>
+      <p>Silakan login terlebih dahulu untuk mencatat absensi</p>
+      <div class="login-form">
+        <div class="err-msg" id="loginError"></div>
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="email@contoh.com">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button class="btn btn-primary" onclick="doLogin()" id="btnLogin">Login & Absen</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+
+    function showState(state) {
+      ['stateLoading','stateSuccess','stateError','stateLogin'].forEach(s => {
+        document.getElementById(s).style.display = s === state ? 'block' : 'none';
+      });
+    }
+
+    function showSuccess(data) {
+      const now = new Date();
+      const user = AuthAPI.getCurrentUser();
+      document.getElementById('userName').textContent = user ? user.name : 'User';
+      document.getElementById('jamMasuk').textContent = data.jamMasuk || now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+      document.getElementById('tanggal').textContent = now.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+      showState('stateSuccess');
+    }
+
+    function showError(msg) {
+      document.getElementById('errorMsg').textContent = msg;
+      showState('stateError');
+    }
+
+    async function submitAbsensi() {
+      try {
+        const res = await AttendanceAPI.scan(token);
+        if (res && res.success) {
+          showSuccess(res.data || {});
+        } else {
+          showError(res ? res.message : 'Gagal mengirim absensi.');
+        }
+      } catch(e) {
+        showError('Terjadi kesalahan: ' + e.message);
+      }
+    }
+
+    async function doLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const errEl = document.getElementById('loginError');
+      const btn = document.getElementById('btnLogin');
+
+      if (!email || !password) {
+        errEl.textContent = 'Email dan password harus diisi.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.textContent = 'Memproses...';
+      btn.disabled = true;
+      errEl.style.display = 'none';
+
+      try {
+        const res = await AuthAPI.login(email, password);
+        if (res && res.success) {
+          // Login success, now submit absensi
+          showState('stateLoading');
+          await submitAbsensi();
+        } else {
+          errEl.textContent = res ? res.message : 'Login gagal.';
+          errEl.style.display = 'block';
+          btn.textContent = 'Login & Absen';
+          btn.disabled = false;
+        }
+      } catch(e) {
+        errEl.textContent = 'Terjadi kesalahan koneksi.';
+        errEl.style.display = 'block';
+        btn.textContent = 'Login & Absen';
+        btn.disabled = false;
+      }
+    }
+
+    // Enter key to login
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && document.getElementById('stateLogin').style.display !== 'none') doLogin();
+    });
+
+    // === INIT ===
+    (async function() {
+      if (!token) {
+        showError('Token QR Code tidak ditemukan. Pastikan scan QR Code yang benar.');
+        document.getElementById('errorTitle').textContent = 'QR Tidak Valid';
+        return;
+      }
+
+      if (AuthAPI.isLoggedIn()) {
+        // Already logged in → submit directly
+        await submitAbsensi();
+      } else {
+        // Not logged in → show login form
+        showState('stateLogin');
+      }
+    })();
+  </script>
+</body>
+</html>

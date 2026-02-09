@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelola Keluhan - Sistem Monitoring Magang PLN ICON+</title>
+  <link rel="stylesheet" href="css/cssadmin.css">
+  <link rel="icon" href="assets/img/pln-logo-small.svg">
+</head>
+<body>
+  <div class="app-wrapper">
+    <div class="app-bg"><img src="assets/img/iconnet-banner.jpeg" alt="bg"></div>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-close-btn" onclick="closeSidebar()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg></button>
+      <div class="sidebar-brand">
+        <div class="brand-logo"><img src="assets/img/pln-logo-small.svg" alt="PLN"></div>
+        <div class="brand-text"><span class="brand-name">PLN ICON+</span><span class="brand-sub">Admin Panel</span></div>
+      </div>
+      <nav class="sidebar-menu">
+        <a class="menu-item" href="dashboardadmin.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+        <a class="menu-item" href="qrcodeadmin.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/></svg>Kelola QR Code</a>
+        <a class="menu-item" href="datapeserta.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Data Peserta</a>
+        <a class="menu-item" href="logaktivitas.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Log Aktivitas</a>
+        <a class="menu-item active" href="kelolakeluhan.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Kelola Keluhan</a>
+      </nav>
+      <div class="sidebar-footer"><a class="menu-item" onclick="logout()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Keluar</a></div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu-btn" onclick="openSidebar()" aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg></button>
+        <span class="topbar-title">Sistem Monitoring Magang</span>
+        <div class="topbar-right">
+          <div class="topbar-search"><span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg></span><input type="text" placeholder="Cari..."></div>
+          <div class="topbar-notif"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="notif-badge">1</span></div>
+          <div class="topbar-avatar" id="topbarAvatar">AR</div>
+        </div>
+      </header>
+
+      <div class="page-content page-enter">
+        <div class="page-header">
+          <h1>Kelola Keluhan</h1>
+          <p>Kelola dan tanggapi laporan keluhan dari peserta magang</p>
+        </div>
+
+        <!-- Keluhan Stats -->
+        <div class="keluhan-stats-grid">
+          <div class="keluhan-stat">
+            <div class="ks-header">
+              <span class="ks-label">Total Laporan</span>
+              <div class="ks-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            </div>
+            <div class="ks-value" id="ksTotalLaporan">0</div>
+          </div>
+          <div class="keluhan-stat">
+            <div class="ks-header">
+              <span class="ks-label">Menunggu</span>
+              <div class="ks-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            </div>
+            <div class="ks-value" id="ksMenunggu">0</div>
+          </div>
+          <div class="keluhan-stat">
+            <div class="ks-header">
+              <span class="ks-label">Diproses</span>
+              <div class="ks-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg></div>
+            </div>
+            <div class="ks-value" id="ksDiproses">0</div>
+          </div>
+          <div class="keluhan-stat">
+            <div class="ks-header">
+              <span class="ks-label">Selesai</span>
+              <div class="ks-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            </div>
+            <div class="ks-value" id="ksSelesai">0</div>
+          </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="filter-card">
+          <div class="filter-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            <h3>Filter & Pencarian</h3>
+          </div>
+          <div class="filter-row">
+            <div class="filter-search-wrap">
+              <span class="fs-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg></span>
+              <input type="text" id="searchKeluhan" placeholder="Cari laporan..." oninput="filterKeluhan()">
+            </div>
+            <select id="filterStatus" onchange="filterKeluhan()">
+              <option value="">Semua Status</option>
+              <option value="Menunggu">Menunggu</option>
+              <option value="Diproses">Diproses</option>
+              <option value="Selesai">Selesai</option>
+            </select>
+            <select id="filterPrioritas" onchange="filterKeluhan()">
+              <option value="">Semua Prioritas</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Keluhan List -->
+        <div class="keluhan-list-card">
+          <h3>Daftar Keluhan</h3>
+          <p class="klc-sub" id="keluhanCount">Menampilkan 0 dari 0 laporan</p>
+          <div id="keluhanListContainer">
+            <div class="keluhan-empty">
+              <div class="ke-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg></div>
+              <p>Tidak ada laporan ditemukan</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="help-btn" onclick="showToast('Butuh bantuan? Hubungi IT Support','info')">?</button>
+  </div>
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/api.js"></script>
+
+  <script>
+    function checkAdminAuth(){if(!AuthAPI.isLoggedIn()){window.location.href='login.html';return null;}const u=AuthAPI.getCurrentUser();if(!u||u.role!=='admin'){window.location.href='login.html';return null;}return u;}
+    function logout(){showToast('Berhasil keluar.','success');setTimeout(()=>AuthAPI.logout(),800);}
+    function showToast(msg,type='info'){const c=document.getElementById('toastContainer');const icons={success:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',error:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>',info:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'};const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`<div class="toast-icon">${icons[type]||icons.info}</div><span class="toast-msg">${msg}</span>`;c.appendChild(t);setTimeout(()=>t.remove(),3500);}
+
+    let allKeluhanData = [];
+
+    async function loadKeluhan() {
+      const res = await ComplaintAPI.getAll();
+      if (!res || !res.success) { showToast('Gagal memuat data keluhan.','error'); return; }
+      allKeluhanData = res.data;
+      updateStats();
+      renderKeluhan(allKeluhanData);
+    }
+
+    function updateStats() {
+      const total = allKeluhanData.length;
+      const menunggu = allKeluhanData.filter(k => k.status === 'Menunggu').length;
+      const diproses = allKeluhanData.filter(k => k.status === 'Diproses').length;
+      const selesai = allKeluhanData.filter(k => k.status === 'Selesai').length;
+      document.getElementById('ksTotalLaporan').textContent = total;
+      document.getElementById('ksMenunggu').textContent = menunggu;
+      document.getElementById('ksDiproses').textContent = diproses;
+      document.getElementById('ksSelesai').textContent = selesai;
+    }
+
+    function renderKeluhan(data) {
+      const container = document.getElementById('keluhanListContainer');
+      const countEl = document.getElementById('keluhanCount');
+      countEl.textContent = `Menampilkan ${data.length} dari ${allKeluhanData.length} laporan`;
+
+      if (data.length === 0) {
+        container.innerHTML = `
+          <div class="keluhan-empty">
+            <div class="ke-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg></div>
+            <p>Tidak ada laporan ditemukan</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = data.map((k,i) => {
+        const date = k.createdAt ? new Date(k.createdAt).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}) : '-';
+        const userName = k.userId?.name || 'Unknown';
+        const prioClass = k.prioritas==='High'?'high':k.prioritas==='Medium'?'medium':'low';
+        const statusColor = k.status==='Menunggu'?'background:#fef3c7;color:#d97706':k.status==='Diproses'?'background:var(--primary-50);color:var(--primary-600)':'background:#e6f9f0;color:#059669';
+        return `
+        <div style="padding:20px;border:1px solid var(--gray-200);border-radius:var(--radius-md);margin-bottom:12px;transition:var(--transition-base);animation:fadeInUp 0.3s ease ${i*0.06}s both;cursor:pointer" onmouseover="this.style.borderColor='var(--primary-200)';this.style.background='var(--gray-50)'" onmouseout="this.style.borderColor='var(--gray-200)';this.style.background='transparent'">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:15px;font-weight:600;color:var(--gray-800)">${k.judul || 'Tanpa Judul'}</span>
+            <span style="font-size:12px;color:var(--gray-400)">${date}</span>
+          </div>
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px"><strong>${userName}</strong></div>
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:12px">${(k.deskripsi||'').substring(0,120)}${(k.deskripsi||'').length>120?'...':''}</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <span style="display:inline-flex;padding:3px 12px;border-radius:var(--radius-full);font-size:11px;font-weight:600;${statusColor}">${k.status}</span>
+            <span class="priority-badge ${prioClass}">${k.prioritas||'Medium'}</span>
+            <span class="category-badge">${k.kategori||'Lainnya'}</span>
+            <div style="margin-left:auto;display:flex;gap:6px">
+              ${k.status!=='Selesai'?`
+              <button class="btn-outline" style="padding:5px 14px;font-size:11px" onclick="updateKeluhanStatus('${k._id}','Diproses')">Proses</button>
+              <button class="btn btn-success" style="padding:5px 14px;font-size:11px;border-radius:var(--radius-md)" onclick="updateKeluhanStatus('${k._id}','Selesai')">Selesai</button>
+              `:'<span style="font-size:12px;color:var(--accent-green);font-weight:600">✓ Resolved</span>'}
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function filterKeluhan() {
+      const q = document.getElementById('searchKeluhan').value.toLowerCase();
+      const statusFilter = document.getElementById('filterStatus').value;
+      const prioFilter = document.getElementById('filterPrioritas').value;
+      let data = [...allKeluhanData];
+      if (q) data = data.filter(k => (k.judul||'').toLowerCase().includes(q) || (k.deskripsi||'').toLowerCase().includes(q) || (k.userId?.name||'').toLowerCase().includes(q));
+      if (statusFilter) data = data.filter(k => k.status === statusFilter);
+      if (prioFilter) data = data.filter(k => k.prioritas === prioFilter);
+      renderKeluhan(data);
+    }
+
+    async function updateKeluhanStatus(id, newStatus) {
+      const res = await ComplaintAPI.updateStatus(id, newStatus);
+      if (res && res.success) {
+        showToast(`Status berhasil diubah ke "${newStatus}"`, 'success');
+        await loadKeluhan();
+      } else {
+        showToast(res ? res.message : 'Gagal mengubah status.', 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = checkAdminAuth();
+      if (user) document.getElementById('topbarAvatar').textContent = user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+      loadKeluhan();
+    });
+  </script>
+<script>
+function openSidebar(){var s=document.getElementById('sidebar'),o=document.getElementById('sidebarOverlay');if(s)s.classList.add('open');if(o)o.classList.add('active');document.body.style.overflow='hidden'}
+function closeSidebar(){var s=document.getElementById('sidebar'),o=document.getElementById('sidebarOverlay');if(s)s.classList.remove('open');if(o)o.classList.remove('active');document.body.style.overflow=''}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.sidebar-menu .menu-item').forEach(function(i){i.addEventListener('click',function(){if(window.innerWidth<=768)closeSidebar()})});document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSidebar()});window.addEventListener('resize',function(){if(window.innerWidth>768)closeSidebar()})});
+</script>
+</body>
+</html>

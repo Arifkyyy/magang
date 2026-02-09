@@ -1,0 +1,13 @@
+<!-- SIDEBAR COMPONENT - Already integrated into dashboarduser.html -->
+<!-- Include CSS: css/style.css | JS: js/app.js -->
+<aside class="sidebar">
+  <div class="sidebar-brand"><div class="brand-logo"><img src="assets/img/pln-logo-small.svg" alt="PLN"></div><div class="brand-text"><span class="brand-name">PLN ICON+</span><span class="brand-sub">Magang</span></div></div>
+  <nav class="sidebar-menu">
+    <a class="menu-item active" data-page="dashboard" onclick="switchPage('dashboard')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg> Dashboard</a>
+    <a class="menu-item" data-page="absensi" onclick="switchPage('absensi')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg> Absensi</a>
+    <a class="menu-item" data-page="input-pekerjaan" onclick="switchPage('input-pekerjaan')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg> Input Pekerjaan</a>
+    <a class="menu-item" data-page="laporan-kendala" onclick="switchPage('laporan-kendala')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/></svg> Laporan Kendala</a>
+    <a class="menu-item" data-page="profil" onclick="switchPage('profil')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profil</a>
+  </nav>
+  <div class="sidebar-footer"><a class="menu-item" onclick="logout()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Keluar</a></div>
+</aside>

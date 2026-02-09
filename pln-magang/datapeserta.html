@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Peserta - Sistem Monitoring Magang PLN ICON+</title>
+  <link rel="stylesheet" href="css/cssadmin.css">
+  <link rel="icon" href="assets/img/pln-logo-small.svg">
+</head>
+<body>
+  <div class="app-wrapper">
+    <div class="app-bg"><img src="assets/img/iconnet-banner.jpeg" alt="bg"></div>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-close-btn" onclick="closeSidebar()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg></button>
+      <div class="sidebar-brand">
+        <div class="brand-logo"><img src="assets/img/pln-logo-small.svg" alt="PLN"></div>
+        <div class="brand-text"><span class="brand-name">PLN ICON+</span><span class="brand-sub">Admin Panel</span></div>
+      </div>
+      <nav class="sidebar-menu">
+        <a class="menu-item" href="dashboardadmin.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+        <a class="menu-item" href="qrcodeadmin.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/></svg>Kelola QR Code</a>
+        <a class="menu-item active" href="datapeserta.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Data Peserta</a>
+        <a class="menu-item" href="logaktivitas.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Log Aktivitas</a>
+        <a class="menu-item" href="kelolakeluhan.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Kelola Keluhan</a>
+      </nav>
+      <div class="sidebar-footer"><a class="menu-item" onclick="logout()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Keluar</a></div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu-btn" onclick="openSidebar()" aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg></button>
+        <span class="topbar-title">Sistem Monitoring Magang</span>
+        <div class="topbar-right">
+          <div class="topbar-search"><span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg></span><input type="text" placeholder="Cari..."></div>
+          <div class="topbar-notif"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="notif-badge">1</span></div>
+          <div class="topbar-avatar" id="topbarAvatar" onclick="openProfileModal()" style="cursor:pointer" title="Edit Profile">AR</div>
+        </div>
+      </header>
+
+      <div class="page-content page-enter">
+        <div class="page-header-row">
+          <div class="page-header">
+            <h1>Data Peserta Magang</h1>
+            <p>Kelola dan pantau data peserta magang PLN ICON+</p>
+          </div>
+          <button class="btn btn-primary" onclick="openAddModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+            Tambah Peserta
+          </button>
+        </div>
+
+        <!-- Table Card -->
+        <div class="peserta-table-card">
+          <div class="peserta-table-header">
+            <div class="pth-left">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <h3>Daftar Peserta Magang</h3>
+            </div>
+            <div class="peserta-search">
+              <span class="ps-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg></span>
+              <input type="text" id="searchPeserta" placeholder="Cari nama atau instansi..." oninput="filterPeserta()">
+            </div>
+          </div>
+          <table class="peserta-table">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Instansi</th>
+                <th>Total Berkas</th>
+                <th>Total Buku</th>
+                <th>Total Bundle</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="pesertaBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <button class="help-btn" onclick="showToast('Butuh bantuan? Hubungi IT Support','info')">?</button>
+  </div>
+
+  <!-- Edit/Add Peserta Modal -->
+  <div class="modal-overlay" id="pesertaModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Tambah Peserta</h3>
+        <div class="modal-close" onclick="closeModal()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg></div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group"><label>Nama Lengkap</label><input type="text" id="mName" placeholder="Masukkan nama lengkap"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="mEmail" placeholder="email@example.com"></div>
+        <div class="form-group"><label>Instansi / Universitas</label><input type="text" id="mInstansi" placeholder="Nama universitas"></div>
+        <div class="form-group" id="mPasswordGroup"><label>Password <small style="color:var(--gray-400)">(kosongkan jika tidak ingin mengubah)</small></label><input type="password" id="mPassword" placeholder="Minimal 6 karakter" minlength="6"></div>
+        <div class="form-group"><label>Status</label>
+          <select id="mStatus"><option value="Aktif">Aktif</option><option value="Nonaktif">Nonaktif</option></select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" onclick="closeModal()">Batal</button>
+        <button class="btn btn-primary" onclick="savePeserta()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Profile Modal -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Edit Profil Admin</h3>
+        <div class="modal-close" onclick="closeProfileModal()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg></div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group"><label>Nama Lengkap</label><input type="text" id="profileName" placeholder="Nama lengkap"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="profileEmail" placeholder="email@example.com"></div>
+        <div class="form-group"><label>Jabatan</label><input type="text" id="profileJabatan" placeholder="Administrator"></div>
+        <div class="form-group"><label>Password Baru (kosongkan jika tidak ingin mengubah)</label><input type="password" id="profilePassword" placeholder="Password baru"></div>
+        <div class="form-group"><label>Konfirmasi Password Baru</label><input type="password" id="profilePasswordConfirm" placeholder="Konfirmasi password"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" onclick="closeProfileModal()">Batal</button>
+        <button class="btn btn-primary" onclick="saveProfile()">Simpan Profil</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/api.js"></script>
+
+  <style>
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script>
+    function checkAdminAuth(){if(!AuthAPI.isLoggedIn()){window.location.href='login.html';return null;}const u=AuthAPI.getCurrentUser();if(!u||u.role!=='admin'){window.location.href='login.html';return null;}return u;}
+    function logout(){showToast('Berhasil keluar.','success');setTimeout(()=>AuthAPI.logout(),800);}
+    function showToast(msg,type='info'){const c=document.getElementById('toastContainer');const icons={success:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',error:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>',info:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'};const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`<div class="toast-icon">${icons[type]||icons.info}</div><span class="toast-msg">${msg}</span>`;c.appendChild(t);setTimeout(()=>t.remove(),3500);}
+
+    let pesertaData = [];
+    let editingId = null;
+
+    async function loadPeserta() {
+      const res = await UsersAPI.getAll();
+      if (!res || !res.success) { showToast('Gagal memuat data peserta.','error'); return; }
+      pesertaData = res.data;
+      renderPeserta();
+    }
+
+    function renderPeserta(data) {
+      const body = document.getElementById('pesertaBody');
+      if (!data) data = pesertaData;
+      const avatarColors = ['av-a','av-b','av-c','av-d','av-e'];
+      body.innerHTML = data.map((p,i) => {
+        const initials = (p.name||'').split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+        const av = avatarColors[i % avatarColors.length];
+        return `
+        <tr style="animation-delay:${i*0.05}s">
+          <td>
+            <div class="user-cell">
+              <div class="user-avatar ${av}">${initials}</div>
+              <div><div class="user-name">${p.name}</div><div class="user-email">${p.email}</div></div>
+            </div>
+          </td>
+          <td>${p.instansi || '-'}</td>
+          <td><span class="data-highlight">${(p.totalBerkas||0).toLocaleString()}</span></td>
+          <td><span class="data-highlight">${p.totalBuku||0}</span></td>
+          <td><span class="data-highlight">${p.totalBundle||0}</span></td>
+          <td><span class="status-badge ${(p.status||'Aktif').toLowerCase()}">${p.status||'Aktif'}</span></td>
+          <td>
+            <div class="action-btns">
+              <button class="action-btn view" title="Lihat" onclick="viewPesertaDetail('${p._id}')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              <button class="action-btn edit" title="Edit" onclick="openEditModal('${p._id}')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button>
+              <button class="action-btn delete" title="Hapus" onclick="deletePeserta('${p._id}')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function filterPeserta() {
+      const q = document.getElementById('searchPeserta').value.toLowerCase();
+      const filtered = pesertaData.filter(p =>
+        (p.name||'').toLowerCase().includes(q) || (p.instansi||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q)
+      );
+      renderPeserta(filtered);
+    }
+
+    function openAddModal() {
+      editingId = null;
+      document.getElementById('modalTitle').textContent = 'Tambah Peserta';
+      document.getElementById('mName').value = '';
+      document.getElementById('mEmail').value = '';
+      document.getElementById('mInstansi').value = '';
+      document.getElementById('mPassword').value = '';
+      document.getElementById('mStatus').value = 'Aktif';
+      document.getElementById('mPasswordGroup').querySelector('small').textContent = '(default: magang123)';
+      document.getElementById('pesertaModal').classList.add('active');
+    }
+
+    function openEditModal(id) {
+      const p = pesertaData.find(x => x._id === id);
+      if (!p) return;
+      editingId = id;
+      document.getElementById('modalTitle').textContent = 'Edit Data Peserta';
+      document.getElementById('mName').value = p.name;
+      document.getElementById('mEmail').value = p.email;
+      document.getElementById('mInstansi').value = p.instansi || '';
+      document.getElementById('mPassword').value = '';
+      document.getElementById('mStatus').value = p.status || 'Aktif';
+      document.getElementById('mPasswordGroup').querySelector('small').textContent = '(kosongkan jika tidak ingin mengubah)';
+      document.getElementById('pesertaModal').classList.add('active');
+    }
+
+    function closeModal() { document.getElementById('pesertaModal').classList.remove('active'); }
+
+    async function savePeserta() {
+      const name = document.getElementById('mName').value.trim();
+      const email = document.getElementById('mEmail').value.trim();
+      const instansi = document.getElementById('mInstansi').value.trim();
+      const password = document.getElementById('mPassword').value;
+      const status = document.getElementById('mStatus').value;
+
+      if (!name || !email) { showToast('Nama dan email wajib diisi!','error'); return; }
+
+      const btn = document.querySelector('#pesertaModal .btn-primary');
+      btn.disabled = true; btn.textContent = 'Menyimpan...';
+
+      let res;
+      if (editingId) {
+        const data = { name, email, instansi, status };
+        res = await UsersAPI.update(editingId, data);
+      } else {
+        const data = { name, email, instansi, status, password: password || 'magang123' };
+        res = await UsersAPI.create(data);
+      }
+
+      btn.disabled = false; btn.textContent = 'Simpan';
+
+      if (res && res.success) {
+        showToast(res.message, 'success');
+        closeModal();
+        await loadPeserta();
+      } else {
+        showToast(res ? res.message : 'Gagal menyimpan data.', 'error');
+      }
+    }
+
+    function viewPesertaDetail(id) {
+      const p = pesertaData.find(x => x._id === id);
+      if (!p) return;
+      alert(`Nama: ${p.name}\nEmail: ${p.email}\nInstansi: ${p.instansi||'-'}\nTotal Berkas: ${p.totalBerkas||0}\nTotal Buku: ${p.totalBuku||0}\nTotal Bundle: ${p.totalBundle||0}\nStatus: ${p.status||'Aktif'}`);
+    }
+
+    async function deletePeserta(id) {
+      if (!confirm('Yakin ingin menghapus peserta ini?')) return;
+      const res = await UsersAPI.delete(id);
+      if (res && res.success) {
+        showToast('Peserta berhasil dihapus.', 'success');
+        await loadPeserta();
+      } else {
+        showToast(res ? res.message : 'Gagal menghapus.', 'error');
+      }
+    }
+
+    // Profile
+    function openProfileModal() {
+      const user = AuthAPI.getCurrentUser();
+      if (!user) return;
+      document.getElementById('profileName').value = user.name || '';
+      document.getElementById('profileEmail').value = user.email || '';
+      document.getElementById('profileJabatan').value = user.jabatan || 'Administrator';
+      document.getElementById('profilePassword').value = '';
+      if(document.getElementById('profilePasswordConfirm')) document.getElementById('profilePasswordConfirm').value = '';
+      document.getElementById('profileModal').classList.add('active');
+    }
+    function closeProfileModal() { document.getElementById('profileModal').classList.remove('active'); }
+    async function saveProfile() {
+      const name = document.getElementById('profileName').value.trim();
+      const email = document.getElementById('profileEmail').value.trim();
+      const jabatan = document.getElementById('profileJabatan').value.trim();
+      const password = document.getElementById('profilePassword').value;
+      const confirm = document.getElementById('profilePasswordConfirm')?.value;
+      if (!name || !email) { showToast('Nama dan email harus diisi!','error'); return; }
+      if (password && password !== confirm) { showToast('Password tidak cocok!','error'); return; }
+      const data = { name, email, jabatan };
+      if (password) data.password = password;
+      const res = await AuthAPI.updateProfile(data);
+      if (res && res.success) {
+        const initials = name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+        document.getElementById('topbarAvatar').textContent = initials;
+        showToast('Profil berhasil diperbarui!','success');
+        closeProfileModal();
+      } else { showToast(res ? res.message : 'Gagal update profil.','error'); }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = checkAdminAuth();
+      if (user) document.getElementById('topbarAvatar').textContent = user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+      loadPeserta();
+    });
+
+    document.getElementById('pesertaModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+    document.getElementById('profileModal').addEventListener('click', function(e) { if (e.target === this) closeProfileModal(); });
+  </script>
+<script>
+function openSidebar(){var s=document.getElementById('sidebar'),o=document.getElementById('sidebarOverlay');if(s)s.classList.add('open');if(o)o.classList.add('active');document.body.style.overflow='hidden'}
+function closeSidebar(){var s=document.getElementById('sidebar'),o=document.getElementById('sidebarOverlay');if(s)s.classList.remove('open');if(o)o.classList.remove('active');document.body.style.overflow=''}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.sidebar-menu .menu-item').forEach(function(i){i.addEventListener('click',function(){if(window.innerWidth<=768)closeSidebar()})});document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSidebar()});window.addEventListener('resize',function(){if(window.innerWidth>768)closeSidebar()})});
+</script>
+</body>
+</html>

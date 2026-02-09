@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin - Sistem Monitoring Magang PLN ICON+</title>
+  <link rel="stylesheet" href="css/cssadmin.css">
+  <link rel="icon" href="assets/img/pln-logo-small.svg">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-wrapper">
+    <div class="app-bg"><img src="assets/img/iconnet-banner.jpeg" alt="bg"></div>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-close-btn" onclick="closeSidebar()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg></button>
+      <div class="sidebar-brand">
+        <div class="brand-logo"><img src="assets/img/pln-logo-small.svg" alt="PLN"></div>
+        <div class="brand-text">
+          <span class="brand-name">PLN ICON+</span>
+          <span class="brand-sub">Admin Panel</span>
+        </div>
+      </div>
+      <nav class="sidebar-menu">
+        <a class="menu-item active" href="dashboardadmin.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </a>
+        <a class="menu-item" href="qrcodeadmin.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+          Kelola QR Code
+        </a>
+        <a class="menu-item" href="datapeserta.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Data Peserta
+        </a>
+        <a class="menu-item" href="logaktivitas.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Log Aktivitas
+        </a>
+        <a class="menu-item" href="kelolakeluhan.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Kelola Keluhan
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <a class="menu-item" onclick="logout()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          Keluar
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu-btn" onclick="openSidebar()" aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg></button>
+        <span class="topbar-title">Sistem Monitoring Magang</span>
+        <div class="topbar-right">
+          <div class="topbar-search">
+            <span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg></span>
+            <input type="text" placeholder="Cari...">
+          </div>
+          <div class="topbar-avatar" id="topbarAvatar" onclick="toggleProfilePopup()" style="cursor:pointer" title="Profil Saya">AR</div>
+          
+          <!-- Profile Popup (simplified for this version) -->
+          <div class="profile-popup" id="profilePopup" style="display:none">
+            <div class="profile-popup-header">
+              <div class="profile-popup-avatar" id="popupAvatar">AR</div>
+              <div class="profile-popup-info">
+                <h4 id="popupName">Admin User</h4>
+                <p id="popupEmail">admin@plniconplus.com</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="page-content page-enter">
+        <!-- Header -->
+        <div class="page-header-row">
+          <div class="page-header">
+            <h1>Dashboard Monitoring</h1>
+            <p>Overview produktivitas dan kehadiran peserta magang</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn-filter" onclick="showToast('Filter diterapkan','info')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Filter
+            </button>
+            <button class="btn-export" onclick="showToast('Mengexport data...','success')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              Export Excel
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Stat Cards -->
+        <div class="admin-stats-grid">
+          <div class="admin-stat-card">
+            <div class="stat-info">
+              <div class="stat-label">Total Pekerjaan Selesai
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div class="stat-value stat-value-blue" id="statTotal">1,245</div>
+              <div class="stat-change"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg><span>+12% minggu ini</span></div>
+            </div>
+            <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="stat-info">
+              <div class="stat-label">Total Peserta Magang
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="stat-value" id="statPeserta">24</div>
+              <div class="stat-change"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg><span>Semua aktif</span></div>
+            </div>
+            <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="stat-info">
+              <div class="stat-label">Rata-rata Produktivitas
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              </div>
+              <div class="stat-value stat-value-yellow" id="statProduktivitas">52</div>
+              <div class="stat-change"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg><span>Item/hari per orang</span></div>
+            </div>
+            <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="stat-info">
+              <div class="stat-label">Kehadiran Hari Ini
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="stat-value stat-value-red" id="statKehadiran">96%</div>
+              <div class="stat-change"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg><span>23/24 Hadir</span></div>
+            </div>
+            <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          </div>
+        </div>
+
+        <!-- Charts Row 1: Progres + Distribusi -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+                  <span class="chart-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg></span>
+                  <h3>Progres Pekerjaan Mingguan</h3>
+                </div>
+                <p>Tren penyelesaian tugas per kategori hari ini</p>
+              </div>
+            </div>
+            <div class="chart-canvas-wrapper"><canvas id="weeklyChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Distribusi Jenis Tugas</h3>
+                <p>Proporsi beban kerja minggu ini</p>
+              </div>
+            </div>
+            <div class="chart-canvas-wrapper" style="height:220px;position:relative">
+              <canvas id="donutChart"></canvas>
+              <div class="donut-center-label">
+                <div class="dcl-value">1.2k</div>
+                <div class="dcl-label">Total Tugas</div>
+              </div>
+            </div>
+            <div class="donut-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#4db8e8"></span>Sortir Dokumen</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#0a6599"></span>Registering</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6"></span>Melepas Step</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#22c55e"></span>Scanning</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#fb923c"></span>Menyusun ke Kardus</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#ffd600"></span>Stikering</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row 2: Top 5 + Distribusi Kehadiran -->
+        <div class="charts-row-2">
+          <div class="chart-card" style="animation-delay:0.35s">
+            <div class="chart-header">
+              <div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+                  <span style="font-size:20px">🏅</span>
+                  <h3>Top 5 Peserta Terrajin</h3>
+                </div>
+                <p>Berdasarkan jumlah tugas yang diselesaikan</p>
+              </div>
+            </div>
+            <div class="top-performer-list" id="topPerformers">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          <div class="chart-card" style="animation-delay:0.4s">
+            <div class="chart-header">
+              <div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+                  <span class="chart-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                  <h3>Distribusi Kehadiran Hari Ini</h3>
+                </div>
+                <p>Grafik akumulasi kedatangan peserta magang</p>
+              </div>
+            </div>
+            <div class="attendance-chart-wrapper"><canvas id="attendanceChart"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Daftar Kehadiran Hari Ini -->
+        <div class="activity-card" style="animation-delay:0.5s">
+          <div class="activity-header">
+            <div>
+              <h3>📋 Daftar Kehadiran Hari Ini</h3>
+              <p>Peserta yang sudah absen — auto refresh 15 detik</p>
+            </div>
+            <a href="qrcodeadmin.html">Kelola QR</a>
+          </div>
+          <div id="dashAttendanceList">
+            <div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">Memuat...</div>
+          </div>
+        </div>
+
+        <!-- Aktivitas Terbaru -->
+        <div class="activity-card">
+          <div class="activity-header">
+            <div>
+              <h3>Aktivitas Terbaru</h3>
+              <p>Update terkini dari peserta magang</p>
+            </div>
+            <a href="logaktivitas.html">Lihat Semua</a>
+          </div>
+          <div class="activity-feed" id="activityFeed">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="help-btn" onclick="showToast('Butuh bantuan? Hubungi IT Support PLN ICON+','info')">?</button>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/api.js"></script>
+
+  <script>
+    // ===== AUTH =====
+    function checkAdminAuth() {
+      if (!AuthAPI.isLoggedIn()) { window.location.href = 'login.html'; return null; }
+      const u = AuthAPI.getCurrentUser();
+      if (!u || u.role !== 'admin') { window.location.href = 'login.html'; return null; }
+      return u;
+    }
+    function logout() {
+      showToast('Berhasil keluar.','success');
+      setTimeout(() => AuthAPI.logout(), 800);
+    }
+    function showToast(message, type='info') {
+      const container = document.getElementById('toastContainer');
+      const icons = {
+        success:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
+        error:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>',
+        info:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'
+      };
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<div class="toast-icon">${icons[type]||icons.info}</div><span class="toast-msg">${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    }
+    function toggleProfilePopup() {
+      const popup = document.getElementById('profilePopup');
+      if(popup) popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // ===== COUNTER ANIMATION =====
+    function animateCounter(id, target, suffix='') {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const duration = 1200;
+      const startTime = performance.now();
+      function tick(now) {
+        const p = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        const val = Math.round(target * eased);
+        el.textContent = val.toLocaleString() + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // ===== LOAD DASHBOARD DATA FROM API =====
+    async function loadDashboardData() {
+      const res = await DashboardAPI.getAdmin();
+      if (!res || !res.success) {
+        showToast('Gagal memuat data dashboard.', 'error');
+        return;
+      }
+      const d = res.data;
+
+      // Stat cards
+      animateCounter('statTotal', d.totalPekerjaanSelesai || 0);
+      animateCounter('statPeserta', d.totalPeserta || 0);
+      animateCounter('statProduktivitas', d.avgProductivity || 0);
+      
+      const rate = d.attendanceRate || 0;
+      document.getElementById('statKehadiran').textContent = rate + '%';
+      
+      // Update attendance sub-text
+      const attSub = document.querySelector('#statKehadiran').closest('.stat-info').querySelector('.stat-change span');
+      if (attSub) attSub.textContent = `${d.todayAttendance || 0}/${d.totalPeserta || 0} Hadir`;
+
+      // Charts
+      renderWeeklyChart(d.weeklyProgress || []);
+      renderDonutChart(d.workDistribution || []);
+      renderTopPerformers(d.topPerformers || []);
+      renderActivityFeed(d.recentActivity || []);
+      renderAttendanceChart(d.todayAttendance || 0, d.totalPeserta || 0);
+    }
+
+    // ===== CHARTS =====
+    let weeklyChartInstance = null;
+    function renderWeeklyChart(weeklyProgress) {
+      const ctx = document.getElementById('weeklyChart');
+      if (!ctx) return;
+      if (weeklyChartInstance) weeklyChartInstance.destroy();
+
+      const labels = weeklyProgress.map(w => {
+        const dt = new Date(w._id);
+        return dt.toLocaleDateString('id-ID', {weekday:'short'});
+      });
+
+      weeklyChartInstance = new Chart(ctx, {
+        type:'bar',
+        data:{
+          labels: labels.length ? labels : ['Belum ada data'],
+          datasets:[
+            {label:'Berkas', data:weeklyProgress.map(w=>w.berkas), backgroundColor:'rgba(77,184,232,0.85)', borderRadius:5, barPercentage:0.5},
+            {label:'Buku', data:weeklyProgress.map(w=>w.buku), backgroundColor:'rgba(139,92,246,0.85)', borderRadius:5, barPercentage:0.5},
+            {label:'Bundle', data:weeklyProgress.map(w=>w.bundle), backgroundColor:'rgba(34,197,94,0.85)', borderRadius:5, barPercentage:0.5}
+          ]
+        },
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          animation:{duration:1500, easing:'easeOutQuart'},
+          plugins:{
+            legend:{display:true, position:'bottom', labels:{color:'#64748b',font:{size:12,weight:'500'},padding:12,usePointStyle:true,pointStyle:'circle',boxWidth:8,boxHeight:8}},
+            tooltip:{backgroundColor:'#fff',titleColor:'#1e293b',bodyColor:'#64748b',borderColor:'#e2e8f0',borderWidth:1,cornerRadius:10,padding:12,displayColors:true}
+          },
+          scales:{
+            x:{stacked:false,grid:{display:false},ticks:{color:'#94a3b8',font:{weight:'600'}}},
+            y:{stacked:false,grid:{color:'rgba(226,232,240,0.5)',drawBorder:false},ticks:{color:'#94a3b8'},beginAtZero:true}
+          }
+        }
+      });
+    }
+
+    let donutChartInstance = null;
+    function renderDonutChart(workDistribution) {
+      const ctx = document.getElementById('donutChart');
+      if (!ctx) return;
+      if (donutChartInstance) donutChartInstance.destroy();
+
+      const colors = ['#4db8e8','#0a6599','#8b5cf6','#22c55e','#fb923c','#ffd600','#ef4444','#ec4899'];
+      const labels = workDistribution.map(w => w._id || 'Lainnya');
+      const data = workDistribution.map(w => w.count);
+      const total = data.reduce((a,b)=>a+b, 0);
+
+      // Update center label
+      const centerVal = document.querySelector('.dcl-value');
+      if(centerVal) centerVal.textContent = total >= 1000 ? (total/1000).toFixed(1)+'k' : total;
+
+      // Update legend
+      const legendContainer = document.querySelector('.donut-legend');
+      if(legendContainer) {
+        legendContainer.innerHTML = labels.map((l,i) => 
+          `<div class="legend-item"><span class="legend-dot" style="background:${colors[i%colors.length]}"></span>${l}</div>`
+        ).join('');
+      }
+
+      donutChartInstance = new Chart(ctx, {
+        type:'doughnut',
+        data:{
+          labels,
+          datasets:[{data, backgroundColor:colors.slice(0,labels.length), borderWidth:3, borderColor:'#fff', hoverOffset:8}]
+        },
+        options:{
+          responsive:true, maintainAspectRatio:false, cutout:'68%',
+          animation:{animateRotate:true, duration:1500, easing:'easeOutQuart'},
+          plugins:{
+            legend:{display:false},
+            tooltip:{backgroundColor:'#fff',titleColor:'#1e293b',bodyColor:'#64748b',borderColor:'#e2e8f0',borderWidth:1,cornerRadius:10,padding:12,
+              callbacks:{label:function(ctx){const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return ctx.label+': '+Math.round(ctx.parsed/t*100)+'%';}}
+            }
+          }
+        }
+      });
+    }
+
+    function renderTopPerformers(topPerformers) {
+      const container = document.getElementById('topPerformers');
+      if (!container) return;
+      if (topPerformers.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:20px">Belum ada data</p>';
+        return;
+      }
+      const maxItems = topPerformers[0]?.totalItems || 1;
+      container.innerHTML = topPerformers.map((p,i) => {
+        const pct = Math.round((p.totalItems / maxItems) * 100);
+        return `
+        <div class="top-performer-item" style="animation:fadeInUp 0.4s ease ${i*0.1}s both">
+          <span class="tp-name">${p.name} <small style="color:var(--gray-400)">(${p.totalItems} item)</small></span>
+          <div class="tp-bar-wrap"><div class="tp-bar" style="width:${pct}%"></div></div>
+        </div>`;
+      }).join('');
+    }
+
+    function renderAttendanceChart(todayCount, totalPeserta) {
+      const ctx = document.getElementById('attendanceChart');
+      if (!ctx) return;
+      // Simple visualization: show today's attendance vs total
+      const labels = ['07:00','07:30','08:00','08:30','09:00'];
+      const step = totalPeserta > 0 ? todayCount / labels.length : 0;
+      const data = labels.map((_,i) => Math.min(Math.round(step * (i+1)), todayCount));
+
+      new Chart(ctx, {
+        type:'line',
+        data:{
+          labels,
+          datasets:[{
+            label:'Kehadiran', data, fill:true,
+            backgroundColor:'rgba(46,213,115,0.15)', borderColor:'#2ed573',
+            borderWidth:3, tension:0.4, pointRadius:4, pointBackgroundColor:'#2ed573', pointBorderColor:'#fff', pointBorderWidth:2
+          }]
+        },
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          animation:{duration:1500,easing:'easeOutQuart'},
+          plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#1e293b',bodyColor:'#64748b',borderColor:'#e2e8f0',borderWidth:1,cornerRadius:10,padding:12}},
+          scales:{
+            x:{grid:{color:'rgba(226,232,240,0.3)',drawBorder:false},ticks:{color:'#94a3b8'}},
+            y:{grid:{color:'rgba(226,232,240,0.3)',drawBorder:false},ticks:{color:'#94a3b8'},beginAtZero:true,max:Math.max(totalPeserta+2, 5)}
+          }
+        }
+      });
+    }
+
+    function renderActivityFeed(recentActivity) {
+      const feed = document.getElementById('activityFeed');
+      if (!feed) return;
+      if (recentActivity.length === 0) {
+        feed.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:30px">Belum ada aktivitas</p>';
+        return;
+      }
+      feed.innerHTML = recentActivity.map((a,i) => {
+        const name = a.userId?.name || 'Unknown';
+        const timeAgo = getTimeAgo(a.createdAt);
+        return `
+        <div class="activity-feed-item" style="animation-delay:${i*0.08}s">
+          <div class="afi-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="afi-content"><div class="afi-name">${name}</div><div class="afi-desc">${a.jenis}: ${a.berkas} berkas, ${a.buku} buku, ${a.bundle} bundle</div></div>
+          <span class="afi-time">${timeAgo}</span>
+        </div>`;
+      }).join('');
+    }
+
+    function getTimeAgo(dateStr) {
+      const diff = Date.now() - new Date(dateStr).getTime();
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1) return 'Baru saja';
+      if (mins < 60) return mins + ' menit lalu';
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return hours + ' jam lalu';
+      const days = Math.floor(hours / 24);
+      return days + ' hari lalu';
+    }
+
+    // ===== INIT =====
+    async function loadDashAttendanceList() {
+      const container = document.getElementById('dashAttendanceList');
+      if (!container) return;
+      try {
+        const res = await fetch(API_BASE + '/attendance/today', {
+          headers: { 'Authorization': 'Bearer ' + getToken() }
+        });
+        const data = await res.json();
+
+        if (!data.success || !data.data || data.data.length === 0) {
+          container.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8;font-size:13px">📋 Belum ada peserta yang absen hari ini</div>';
+          return;
+        }
+
+        const records = data.data;
+        container.innerHTML = `
+          <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+            <span style="background:#f0fdf4;color:#16a34a;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px">✅ ${records.length} Hadir</span>
+            <span style="font-size:11px;color:#94a3b8">Terakhir update: ${new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})} WIB</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            ${records.map((r, i) => {
+              const name = r.userId ? r.userId.name : 'Unknown';
+              const instansi = r.userId ? (r.userId.instansi || '-') : '-';
+              const initials = name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+              return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f8fafc;border-radius:10px;border:1px solid #f1f5f9;animation:fadeInUp 0.3s ease ${i*0.05}s both">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#0a6599,#4db8e8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">${initials}</div>
+                  <div>
+                    <div style="font-weight:600;font-size:13px;color:#1e293b">${name}</div>
+                    <div style="font-size:11px;color:#94a3b8">${instansi}</div>
+                  </div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:700;font-size:14px;color:#0a6599">${r.jamMasuk || '-'}</div>
+                  <div style="font-size:10px;color:#94a3b8">${r.jamKeluar ? 'Keluar: ' + r.jamKeluar : 'Belum keluar'}</div>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>`;
+      } catch(e) {
+        container.innerHTML = '<div style="text-align:center;padding:16px;color:#ef4444;font-size:13px">Gagal memuat data kehadiran</div>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = checkAdminAuth();
+      if (user) {
+        const initials = user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+        document.getElementById('topbarAvatar').textContent = initials;
+        const pn = document.getElementById('popupName');
+        const pe = document.getElementById('popupEmail');
+        if(pn) pn.textContent = user.name;
+        if(pe) pe.textContent = user.email;
+      }
+      loadDashboardData();
+      loadDashAttendanceList();
+
+      // Auto-refresh attendance every 15 seconds
+      setInterval(() => loadDashAttendanceList(), 15000);
+    });
+  </script>
+<script>
+function openSidebar(){var s=document.getElementById('sidebar'),o=document.getElementById('sidebarOverlay');if(s)s.classList.add('open');if(o)o.classList.add('active');document.body.style.overflow='hidden'}
+function closeSidebar(){var s=document.getElementById('sidebar'),o=document.getElementById('sidebarOverlay');if(s)s.classList.remove('open');if(o)o.classList.remove('active');document.body.style.overflow=''}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.sidebar-menu .menu-item').forEach(function(i){i.addEventListener('click',function(){if(window.innerWidth<=768)closeSidebar()})});document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSidebar()});window.addEventListener('resize',function(){if(window.innerWidth>768)closeSidebar()})});
+</script>
+</body>
+</html>

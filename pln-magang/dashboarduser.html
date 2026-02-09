@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Sistem Monitoring Magang PLN ICON+</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="assets/img/pln-logo-small.svg">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Background -->
+    <div class="app-bg">
+      <img src="assets/img/iconnet-banner.jpeg" alt="bg">
+    </div>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-close-btn" onclick="closeSidebar()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg></button>
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <img src="assets/img/pln-logo-small.svg" alt="PLN">
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">PLN ICON+</span>
+          <span class="brand-sub">Magang</span>
+        </div>
+      </div>
+      <nav class="sidebar-menu">
+        <a class="menu-item active" data-page="dashboard" onclick="switchPage('dashboard')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </a>
+        <a class="menu-item" data-page="absensi" onclick="switchPage('absensi')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+          Absensi
+        </a>
+        <a class="menu-item" data-page="input-pekerjaan" onclick="switchPage('input-pekerjaan')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
+          Input Pekerjaan
+          <span class="menu-badge" id="pendingBadge" style="display:none">0</span>
+        </a>
+        <a class="menu-item" data-page="laporan-kendala" onclick="switchPage('laporan-kendala')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+          Laporan Kendala
+        </a>
+        <a class="menu-item" data-page="profil" onclick="switchPage('profil')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profil
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <a class="menu-item" onclick="logout()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          Keluar
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu-btn" onclick="openSidebar()" aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg></button>
+        <span class="topbar-title">Sistem Monitoring Magang</span>
+        <div class="topbar-right">
+          <div class="topbar-search">
+            <span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg></span>
+            <input type="text" placeholder="Cari...">
+          </div>
+          <div class="topbar-avatar" id="topbarAvatar" onclick="toggleProfilePopup()" style="cursor:pointer" title="Profil Saya">AR</div>
+          
+          <!-- Profile Popup -->
+          <div class="profile-popup" id="profilePopup">
+            <div class="profile-popup-header">
+              <div class="profile-popup-avatar" id="popupAvatar">AR</div>
+              <div class="profile-popup-info">
+                <h4 id="popupName">Ahmad Rizki</h4>
+                <p id="popupEmail">ahmad.rizki@mail.com</p>
+              </div>
+            </div>
+            <div class="profile-popup-body">
+              <div class="profile-info-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                <div>
+                  <span class="label">Instansi</span>
+                  <span class="value" id="popupInstansi">Universitas Indonesia</span>
+                </div>
+              </div>
+              <div class="profile-info-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <div>
+                  <span class="label">Email</span>
+                  <span class="value" id="popupEmailValue">ahmad.rizki@mail.com</span>
+                </div>
+              </div>
+              <div class="profile-info-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+                <div>
+                  <span class="label">Role</span>
+                  <span class="value">Peserta Magang</span>
+                </div>
+              </div>
+              <div class="profile-info-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                <div>
+                  <span class="label">Periode Magang</span>
+                  <span class="value" id="popupPeriode">Jan - Jun 2026</span>
+                </div>
+              </div>
+            </div>
+            <div class="profile-stats-popup">
+              <div class="stat-popup-item">
+                <span class="stat-popup-value" id="popupBerkas">0</span>
+                <span class="stat-popup-label">Berkas</span>
+              </div>
+              <div class="stat-popup-item">
+                <span class="stat-popup-value" id="popupBuku">0</span>
+                <span class="stat-popup-label">Buku</span>
+              </div>
+              <div class="stat-popup-item">
+                <span class="stat-popup-value" id="popupBundle">0</span>
+                <span class="stat-popup-label">Bundle</span>
+              </div>
+            </div>
+            <div class="profile-popup-footer">
+              <button class="profile-popup-btn edit" onclick="switchPage('profil')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Lihat Profil Lengkap
+              </button>
+              <button class="profile-popup-btn logout" onclick="logout()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                Keluar
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- PAGE: DASHBOARD -->
+      <div class="page-content page-enter" id="page-dashboard">
+        <div class="page-header"><h1>Dashboard</h1><p>Selamat datang kembali! Berikut ringkasan progres harian Anda.</p></div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-info">
+              <div class="stat-label">Total Berkas</div>
+              <div class="stat-value" id="statBerkas">0</div>
+              <div class="stat-change"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><span>+12% dari minggu lalu</span></div>
+            </div>
+            <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <div class="stat-label">Total Buku</div>
+              <div class="stat-value" id="statBuku">0</div>
+              <div class="stat-change"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><span>+8% dari minggu lalu</span></div>
+            </div>
+            <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <div class="stat-label">Total Bundle</div>
+              <div class="stat-value" id="statBundle">0</div>
+              <div class="stat-change"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><span>+15% dari minggu lalu</span></div>
+            </div>
+            <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
+          </div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card"><div class="chart-header"><h3>Progres Kerja (Mingguan)</h3><p>Jumlah item yang diproses per hari</p></div><div class="chart-canvas-wrapper"><canvas id="weeklyChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-header"><h3>Distribusi Pekerjaan</h3><p>Rincian jenis pekerjaan</p></div><div class="chart-canvas-wrapper" style="height:220px"><canvas id="donutChart"></canvas></div>
+            <div class="donut-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#4db8e8"></span>Sortir Dokumen</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#0a6599"></span>Registering</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6"></span>Melepas Step</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#22c55e"></span>Scanning</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#fb923c"></span>Menyusun ke Kardus</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#ffd600"></span>Stikering</div>
+            </div>
+          </div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-header"><div><h3>Aktivitas Terbaru</h3><p>Log pekerjaan terbaru Anda</p></div></div>
+          <table class="activity-table"><thead><tr><th>Tanggal</th><th>Jenis Pekerjaan</th><th>Keterangan</th><th>Jumlah</th><th>Status</th></tr></thead><tbody id="activityBody"></tbody></table>
+          <div id="activityEmpty" style="text-align:center;padding:40px;color:var(--gray-400);display:none;">Belum ada aktivitas. Mulai input pekerjaan Anda!</div>
+        </div>
+      </div>
+
+      <!-- PAGE: ABSENSI -->
+      <div class="page-content page-hidden" id="page-absensi">
+        <div class="absensi-date-bar">
+          <div class="date-info"><div class="date-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg></div><div class="date-text"><h3 id="absensiDate">Loading...</h3><p>Jam masuk: 08:00 - 09:00 WIB</p></div></div>
+          <div class="last-absensi"><span>Absensi terakhir</span><span class="time" id="lastAbsensiTime">--:-- WIB</span></div>
+        </div>
+        <div class="qr-section">
+          <div class="qr-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg></div>
+          <h3>Absensi via QR Code</h3>
+          <p>Scan QR Code dari admin atau masukkan token secara manual</p>
+
+          <!-- Tab Switch -->
+          <div style="display:flex;gap:8px;margin:16px 0 12px;background:var(--gray-100);border-radius:var(--radius-md);padding:4px">
+            <button id="tabScanCamera" class="btn btn-primary" style="flex:1;padding:8px 12px;font-size:13px;border-radius:var(--radius-sm)" onclick="switchAbsensiTab('camera')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+              Scan Kamera
+            </button>
+            <button id="tabManualToken" class="btn-outline" style="flex:1;padding:8px 12px;font-size:13px;border-radius:var(--radius-sm);background:transparent" onclick="switchAbsensiTab('manual')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+              Input Manual
+            </button>
+          </div>
+
+          <!-- Camera Scanner -->
+          <div id="cameraTab" style="margin:12px 0">
+            <div id="qrScannerContainer" style="width:100%;max-width:350px;margin:0 auto;border-radius:var(--radius-md);overflow:hidden;border:2px solid var(--gray-200)"></div>
+            <p id="scanStatus" style="text-align:center;margin-top:10px;font-size:13px;color:var(--gray-400)">Klik tombol di bawah untuk mulai scan</p>
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+              <button class="btn btn-primary" id="btnStartScan" onclick="startCameraScan()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg> Mulai Scan
+              </button>
+              <button class="btn-outline" id="btnStopScan" onclick="stopCameraScan()" style="display:none">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><rect x="6" y="6" width="12" height="12" rx="2"/></svg> Stop
+              </button>
+            </div>
+          </div>
+
+          <!-- Manual Token Input -->
+          <div id="manualTab" style="margin:16px 0;display:none">
+            <div class="input-wrapper" style="margin-bottom:12px">
+              <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/></svg></span>
+              <input type="text" id="qrTokenInput" placeholder="Paste token QR Code di sini..." style="width:100%;padding:12px 12px 12px 40px;border:1px solid var(--gray-200);border-radius:var(--radius-md);font-size:14px">
+            </div>
+            <button class="btn btn-primary btn-full" onclick="submitManualToken()">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg> Kirim Absensi
+            </button>
+          </div>
+        </div>
+        <div class="absensi-history">
+          <h3><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Riwayat Absensi</h3>
+          <p class="history-sub">7 hari terakhir</p>
+          <table class="history-table"><thead><tr><th>Tanggal</th><th>Jam Masuk</th><th>Status</th></tr></thead><tbody id="absensiHistoryBody"></tbody></table>
+        </div>
+      </div>
+
+      <!-- PAGE: INPUT PEKERJAAN -->
+      <div class="page-content page-hidden" id="page-input-pekerjaan">
+        <div class="input-pekerjaan-layout">
+          <!-- Form Input -->
+          <div class="form-card">
+            <div class="form-card-header">
+              <div class="form-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+              <h2>Formulir Log Harian</h2>
+            </div>
+            <p class="form-card-subtitle">Isi detail pekerjaan Anda hari ini.</p>
+            <form id="pekerjaanForm">
+              <div class="form-group"><label>Tanggal</label><input type="date" id="inputTanggal" required></div>
+              <div class="form-group"><label>Jenis Pekerjaan (Jobdesk)</label>
+                <select id="inputJenis" required>
+                  <option value="">Pilih Pekerjaan (Jobdesk)</option>
+                  <option value="Sortir Dokumen">Sortir Dokumen</option>
+                  <option value="Menginput data arsipan (Registering)">Menginput data arsipan (Registering)</option>
+                  <option value="Melepas Step">Melepas Step</option>
+                  <option value="Melakukan Scanning">Melakukan Scanning</option>
+                  <option value="Menyusun arsip kedalam kardus">Menyusun arsip kedalam kardus</option>
+                  <option value="Stikering">Stikering</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Keterangan Berkas</label><textarea id="inputKeterangan" placeholder="Masukkan keterangan berkas..." rows="3"></textarea></div>
+              <div class="form-row-3">
+                <div class="form-group"><label>Jumlah Berkas</label><input type="number" id="inputBerkas" min="0" value="0" required></div>
+                <div class="form-group"><label>Jumlah Buku</label><input type="number" id="inputBuku" min="0" value="0" required></div>
+                <div class="form-group"><label>Jumlah Bundle</label><input type="number" id="inputBundle" min="0" value="0" required></div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                Simpan sebagai Draft
+              </button>
+            </form>
+            <div class="motivational-bar" style="margin-top: 20px;">
+              <div class="motivational-item"><div class="moti-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="moti-text"><h4>Konsistensi adalah Kunci</h4><p>Pastikan Anda mengisi log harian secara rutin</p></div></div>
+              <div class="motivational-item"><div class="moti-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="16"/><line x1="8" x2="16" y1="12" y2="12"/></svg></div><div class="moti-text"><h4>Review Sebelum Kirim</h4><p>Data draft akan tertahan sampai Anda kirim secara final</p></div></div>
+            </div>
+          </div>
+
+          <!-- Pending List -->
+          <div class="pending-list-card">
+            <div class="pending-header">
+              <h3>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Data Pending
+              </h3>
+              <span class="pending-count" id="pendingCount">0</span>
+            </div>
+            <p class="pending-subtitle">Data yang belum dikirim final. Review dan kirim ke sistem.</p>
+            <div id="pendingListContainer">
+              <div class="pending-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                <p>Belum ada data pending</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: LAPORAN KENDALA -->
+      <div class="page-content page-hidden" id="page-laporan-kendala">
+        <div class="page-header">
+          <h1 style="display:flex;align-items:center;gap:12px"><span style="width:48px;height:48px;background:var(--primary-50);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--primary-500)" stroke-width="2" width="24" height="24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg></span> Laporan Kendala</h1>
+          <p style="margin-top:4px">Laporkan kendala atau masalah yang Anda alami</p>
+        </div>
+        <div class="kendala-layout">
+          <div class="kendala-form-card">
+            <div class="form-card-header"><div class="form-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div><h2>Buat Laporan Baru</h2></div>
+            <p class="form-card-subtitle">Isi form di bawah untuk melaporkan kendala</p>
+            <form id="kendalaForm">
+              <div class="form-group"><label>Judul Kendala *</label><input type="text" id="kendalaJudul" placeholder="Contoh: Sistem error saat input data" required style="width:100%;padding:14px 16px;background:var(--gray-50);border:2px solid var(--gray-200);border-radius:var(--radius-md);font-size:14px;color:var(--gray-800);transition:var(--transition-base)"></div>
+              <div class="form-row">
+                <div class="form-group"><label>Kategori</label>
+                  <select id="kendalaKategori">
+                    <option value="Sortir Dokumen">Sortir Dokumen</option>
+                    <option value="Registering">Registering</option>
+                    <option value="Melepas Step">Melepas Step</option>
+                    <option value="Scanning">Scanning</option>
+                    <option value="Menyusun ke Kardus">Menyusun ke Kardus</option>
+                    <option value="Stikering">Stikering</option>
+                    <option value="Sistem">Sistem</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </div>
+                <div class="form-group"><label>Prioritas</label><select id="kendalaPrioritas"><option value="Low">Low</option><option value="Medium" selected>Medium</option><option value="High">High</option></select></div>
+              </div>
+              <div class="form-group"><label>Deskripsi Kendala *</label><textarea id="kendalaDeskripsi" placeholder="Jelaskan kendala yang Anda alami secara detail..." rows="4" required></textarea></div>
+              <button type="submit" class="btn btn-primary btn-full"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Kirim Laporan</button>
+            </form>
+          </div>
+          <div class="riwayat-card">
+            <h3>Riwayat Laporan</h3><p class="riwayat-sub">Total <span id="totalLaporan">0</span> laporan</p>
+            <div id="riwayatList"><div class="riwayat-empty"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg></div><p>Belum ada laporan</p></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: PROFIL -->
+      <div class="page-content page-hidden" id="page-profil">
+        <div class="profile-layout">
+          <div>
+            <div class="profile-card">
+              <div class="profile-cover"></div>
+              <div class="profile-avatar-area">
+                <div class="profile-avatar" id="profileAvatar">AR</div>
+                <div class="profile-name" id="profileName">Ahmad Rizki</div>
+                <div class="profile-role">Peserta Magang</div>
+                <div class="profile-badges"><span class="badge-aktif">Aktif</span><span class="badge-pln">PLN ICON+</span></div>
+              </div>
+              <div class="profile-stats">
+                <div class="ps-item"><span class="ps-label">Total Berkas</span><span class="ps-value" id="profBerkas">0</span></div>
+                <div class="ps-item"><span class="ps-label">Total Buku</span><span class="ps-value" id="profBuku">0</span></div>
+                <div class="ps-item"><span class="ps-label">Total Bundle</span><span class="ps-value" id="profBundle">0</span></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="profile-info-card">
+              <h3>Informasi Pribadi</h3><p class="info-sub">Perbarui detail pribadi Anda di sini.</p>
+              <div class="profile-form">
+                <div class="form-group"><label>Username</label><div class="input-wrapper"><span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input type="text" class="profile-input" id="profUsername" value="ahmadrizki"></div></div>
+                <div class="form-group"><label>Email</label><div class="input-wrapper"><span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span><input type="email" class="profile-input" id="profEmail" value="ahmad.rizki@mail.com"></div></div>
+                <div class="form-group"><label>Instansi / Universitas</label><div class="input-wrapper"><span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></span><input type="text" class="profile-input" id="profInstansi" value="Universitas Indonesia"></div></div>
+                <div class="form-group"><label>Peran</label><div class="input-wrapper"><span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></span><input type="text" class="profile-input" value="User (Peserta Magang)" disabled style="color:var(--gray-500);background:var(--gray-100)"></div></div>
+                <div class="save-btn-wrapper"><button type="button" class="btn btn-primary" onclick="saveProfile()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Perubahan</button></div>
+              </div>
+            </div>
+            <div class="magang-info-card">
+              <h3>Informasi Magang</h3><p class="info-sub">Detail periode magang Anda</p>
+              <div class="magang-info-grid">
+                <div class="magang-info-item"><div class="mi-label">Tanggal Mulai</div><div class="mi-value">1 Januari 2026</div></div>
+                <div class="magang-info-item"><div class="mi-label">Tanggal Selesai</div><div class="mi-value">30 Juni 2026</div></div>
+                <div class="magang-info-item"><div class="mi-label">Durasi</div><div class="mi-value">6 Bulan</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="help-btn" onclick="showToast('Butuh bantuan? Hubungi admin PLN ICON+','info')">?</button>
+  </div>
+  <div class="toast-container" id="toastContainer"></div>
+
+  <style>
+    /* Profile Popup Styles */
+    .profile-popup {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      width: 340px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      display: none;
+      z-index: 1000;
+      animation: slideDown 0.3s ease;
+    }
+
+    .profile-popup.active {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .profile-popup-header {
+      padding: 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      background: linear-gradient(135deg, #0066cc 0%, #004999 100%);
+      border-radius: 12px 12px 0 0;
+    }
+
+    .profile-popup-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: white;
+      color: #0066cc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 24px;
+      border: 3px solid rgba(255,255,255,0.3);
+    }
+
+    .profile-popup-info h4 {
+      margin: 0 0 4px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .profile-popup-info p {
+      margin: 0;
+      font-size: 13px;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .profile-popup-body {
+      padding: 20px;
+    }
+
+    .profile-info-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .profile-info-item:last-child {
+      border-bottom: none;
+    }
+
+    .profile-info-item svg {
+      width: 20px;
+      height: 20px;
+      color: #6b7280;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .profile-info-item > div {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .profile-info-item .label {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .profile-info-item .value {
+      font-size: 14px;
+      color: #1f2937;
+      font-weight: 500;
+    }
+
+    .profile-stats-popup {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 15px 20px;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .stat-popup-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-popup-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0066cc;
+    }
+
+    .stat-popup-label {
+      font-size: 11px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .profile-popup-footer {
+      padding: 15px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .profile-popup-btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .profile-popup-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .profile-popup-btn.edit {
+      background: #0066cc;
+      color: white;
+    }
+
+    .profile-popup-btn.edit:hover {
+      background: #0052a3;
+    }
+
+    .profile-popup-btn.logout {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .profile-popup-btn.logout:hover {
+      background: #e5e7eb;
+    }
+
+    @media (max-width: 768px) {
+      .profile-popup {
+        right: 10px;
+        width: calc(100vw - 40px);
+        max-width: 340px;
+      }
+    }
+
+    /* Menu Badge */
+    .menu-badge {
+      background: #ef4444;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: auto;
+    }
+
+    /* Input Pekerjaan Layout */
+    .input-pekerjaan-layout {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* Pending List Card */
+    .pending-list-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 20px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+    }
+    .pending-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .pending-header h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    .pending-header svg {
+      width: 22px;
+      height: 22px;
+      color: #f59e0b;
+    }
+    .pending-count {
+      background: #f59e0b;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .pending-subtitle {
+      margin: 0 0 20px 0;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .pending-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #9ca3af;
+    }
+    .pending-empty svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+    .pending-empty p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    /* Pending Item */
+    .pending-item {
+      background: #fff7ed;
+      border: 2px solid #fed7aa;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .pending-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+    .pending-item-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #92400e;
+      margin: 0 0 4px 0;
+    }
+    .pending-item-date {
+      font-size: 12px;
+      color: #78350f;
+    }
+    .pending-item-delete {
+      background: none;
+      border: none;
+      color: #dc2626;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .pending-item-delete:hover {
+      background: #fee2e2;
+    }
+    .pending-item-delete svg {
+      width: 18px;
+      height: 18px;
+    }
+    .pending-item-body {
+      font-size: 13px;
+      color: #78350f;
+      margin-bottom: 12px;
+      padding: 8px 0;
+      border-top: 1px solid #fed7aa;
+      border-bottom: 1px solid #fed7aa;
+    }
+    .pending-item-body div {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+    .pending-item-body .label {
+      color: #92400e;
+      font-weight: 500;
+    }
+    .pending-item-footer {
+      display: flex;
+      gap: 8px;
+    }
+    .pending-item-footer button {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .pending-item-footer button svg {
+      width: 14px;
+      height: 14px;
+    }
+    .btn-send {
+      background: #10b981;
+      color: white;
+    }
+    .btn-send:hover {
+      background: #059669;
+    }
+    .btn-edit {
+      background: white;
+      color: #0066cc;
+      border: 2px solid #0066cc;
+    }
+    .btn-edit:hover {
+      background: #eff6ff;
+    }
+
+    @media (max-width: 1200px) {
+      .input-pekerjaan-layout {
+        grid-template-columns: 1fr;
+      }
+      .pending-list-card {
+        position: relative;
+        top: 0;
+        max-height: none;
+      }
+    }
+  </style>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Initialize pending data storage
+    let pendingData = [];
+
+    // Auth check
+    if (!AuthAPI.isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    // Profile Popup Functions
+    function toggleProfilePopup() {
+      const popup = document.getElementById('profilePopup');
+      popup.classList.toggle('active');
+    }
+
+    async function loadUserProfileData() {
+      const user = AuthAPI.getCurrentUser();
+      if(!user) return;
+
+      const initials = user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+      document.getElementById('topbarAvatar').textContent = initials;
+      document.getElementById('popupAvatar').textContent = initials;
+      document.getElementById('popupName').textContent = user.name;
+      document.getElementById('popupEmail').textContent = user.email;
+      document.getElementById('popupEmailValue').textContent = user.email;
+      document.getElementById('popupInstansi').textContent = user.instansi || '-';
+
+      // Load stats from API
+      const statsRes = await WorkLogAPI.getMyStats();
+      if (statsRes && statsRes.success) {
+        const s = statsRes.data;
+        document.getElementById('popupBerkas').textContent = (s.berkas || 0).toLocaleString();
+        document.getElementById('popupBuku').textContent = (s.buku || 0).toLocaleString();
+        document.getElementById('popupBundle').textContent = (s.bundle || 0).toLocaleString();
+      }
+    }
+
+    // Pending Data Management — load from API (Draft status)
+    async function loadPendingData() {
+      const res = await WorkLogAPI.getAll('status=Draft');
+      if (res && res.success) {
+        pendingData = res.data;
+      }
+      updatePendingBadge();
+      renderPendingList();
+    }
+
+    function updatePendingBadge() {
+      const badge = document.getElementById('pendingBadge');
+      const count = document.getElementById('pendingCount');
+      if(pendingData.length > 0) {
+        badge.textContent = pendingData.length;
+        badge.style.display = 'block';
+        if(count) count.textContent = pendingData.length;
+      } else {
+        badge.style.display = 'none';
+        if(count) count.textContent = '0';
+      }
+    }
+
+    function renderPendingList() {
+      const container = document.getElementById('pendingListContainer');
+      if(!container) return;
+
+      if(pendingData.length === 0) {
+        container.innerHTML = `
+          <div class="pending-empty">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+            <p>Belum ada data pending</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = pendingData.map((item, index) => `
+        <div class="pending-item">
+          <div class="pending-item-header">
+            <div>
+              <div class="pending-item-title">${item.jenis}</div>
+              <div class="pending-item-date">${formatDate(item.tanggal)}</div>
+            </div>
+            <button class="pending-item-delete" onclick="deletePending('${item._id}')" title="Hapus">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+          <div class="pending-item-body">
+            <div><span class="label">Berkas:</span><span>${item.berkas}</span></div>
+            <div><span class="label">Buku:</span><span>${item.buku}</span></div>
+            <div><span class="label">Bundle:</span><span>${item.bundle}</span></div>
+            ${item.keterangan ? `<div style="margin-top:8px;font-size:12px;color:#92400e">${item.keterangan}</div>` : ''}
+          </div>
+          <div class="pending-item-footer">
+            <button class="btn-send" onclick="submitPending('${item._id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Kirim Final
+            </button>
+            <button class="btn-edit" onclick="editPending('${item._id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+              Edit
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      return date.toLocaleDateString('id-ID', options);
+    }
+
+    async function deletePending(id) {
+      if(!confirm('Hapus data pending ini?')) return;
+      const res = await WorkLogAPI.delete(id);
+      if (res && res.success) {
+        showToast('Data pending berhasil dihapus', 'success');
+        loadPendingData();
+      } else {
+        showToast(res ? res.message : 'Gagal menghapus', 'error');
+      }
+    }
+
+    async function editPending(id) {
+      const item = pendingData.find(i => i._id === id);
+      if (!item) return;
+      document.getElementById('inputTanggal').value = new Date(item.tanggal).toISOString().split('T')[0];
+      document.getElementById('inputJenis').value = item.jenis;
+      document.getElementById('inputKeterangan').value = item.keterangan || '';
+      document.getElementById('inputBerkas').value = item.berkas;
+      document.getElementById('inputBuku').value = item.buku;
+      document.getElementById('inputBundle').value = item.bundle;
+
+      // Delete the old draft
+      await WorkLogAPI.delete(id);
+      loadPendingData();
+      showToast('Data dimuat untuk diedit', 'info');
+    }
+
+    async function submitPending(id) {
+      const res = await WorkLogAPI.submit(id);
+      if (res && res.success) {
+        showToast('Data berhasil dikirim final!', 'success');
+        loadPendingData();
+        if(typeof refreshDashboard === 'function') refreshDashboard();
+      } else {
+        showToast(res ? res.message : 'Gagal mengirim', 'error');
+      }
+    }
+
+    // Form submission - save as draft via API
+    document.getElementById('pekerjaanForm')?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const data = {
+        tanggal: document.getElementById('inputTanggal').value,
+        jenis: document.getElementById('inputJenis').value,
+        keterangan: document.getElementById('inputKeterangan').value,
+        berkas: parseInt(document.getElementById('inputBerkas').value) || 0,
+        buku: parseInt(document.getElementById('inputBuku').value) || 0,
+        bundle: parseInt(document.getElementById('inputBundle').value) || 0,
+        status: 'Draft'
+      };
+
+      const res = await WorkLogAPI.create(data);
+      if (res && res.success) {
+        this.reset();
+        document.getElementById('inputTanggal').value = new Date().toISOString().split('T')[0];
+        showToast('Data berhasil disimpan sebagai draft!', 'success');
+        loadPendingData();
+      } else {
+        showToast(res ? res.message : 'Gagal menyimpan', 'error');
+      }
+    });
+
+    // Kendala Form — via API
+    document.getElementById('kendalaForm')?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const data = {
+        judul: document.getElementById('kendalaJudul').value,
+        kategori: document.getElementById('kendalaKategori').value,
+        prioritas: document.getElementById('kendalaPrioritas').value,
+        deskripsi: document.getElementById('kendalaDeskripsi').value
+      };
+
+      const res = await ComplaintAPI.create(data);
+      if (res && res.success) {
+        document.getElementById('kendalaJudul').value = '';
+        document.getElementById('kendalaDeskripsi').value = '';
+        showToast('Laporan kendala berhasil dikirim!', 'success');
+        refreshKendalaFromAPI();
+      } else {
+        showToast(res ? res.message : 'Gagal mengirim', 'error');
+      }
+    });
+
+    async function refreshKendalaFromAPI() {
+      const res = await ComplaintAPI.getAll();
+      if (!res || !res.success) return;
+      const logs = res.data;
+      const totalEl = document.getElementById('totalLaporan');
+      if (totalEl) totalEl.textContent = logs.length;
+
+      const listEl = document.getElementById('riwayatList');
+      if (!listEl) return;
+
+      if (logs.length === 0) {
+        listEl.innerHTML = '<div class="riwayat-empty"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg></div><p>Belum ada laporan</p></div>';
+        return;
+      }
+
+      listEl.innerHTML = '<div class="riwayat-list">' + logs.map((log, i) => {
+        const date = new Date(log.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        const prioClass = log.prioritas === 'High' ? 'high' : log.prioritas === 'Medium' ? 'medium' : 'low';
+        const statusBadge = log.status === 'Selesai' ? '<span style="color:#059669;font-size:11px;font-weight:600">✓ Selesai</span>' : log.status === 'Diproses' ? '<span style="color:#0066cc;font-size:11px;font-weight:600">⟳ Diproses</span>' : '<span style="color:#d97706;font-size:11px;font-weight:600">⏳ Menunggu</span>';
+        return `<div class="riwayat-item" style="animation: fadeInUp 0.3s ease ${i * 0.08}s both;">
+          <div class="ri-header"><span class="ri-title">${log.judul}</span><span class="ri-date">${date}</span></div>
+          <div class="ri-desc">${log.deskripsi.substring(0, 80)}${log.deskripsi.length > 80 ? '...' : ''}</div>
+          <div class="ri-footer"><span class="priority-badge ${prioClass}">${log.prioritas}</span><span class="category-badge">${log.kategori}</span>${statusBadge}</div>
+        </div>`;
+      }).join('') + '</div>';
+    }
+
+    // Override refreshKendala from app.js
+    window.refreshKendala = refreshKendalaFromAPI;
+
+    // Override refreshDashboard to use API
+    const origRefreshDashboard = window.refreshDashboard;
+    window.refreshDashboard = async function() {
+      const res = await DashboardAPI.getUser();
+      if (!res || !res.success) { if(origRefreshDashboard) origRefreshDashboard(); return; }
+      const d = res.data;
+
+      animateCounter('statBerkas', d.totalBerkas || 0);
+      animateCounter('statBuku', d.totalBuku || 0);
+      animateCounter('statBundle', d.totalBundle || 0);
+
+      // Render activity table from API
+      const body = document.getElementById('activityBody');
+      const empty = document.getElementById('activityEmpty');
+      if (body && d.recentActivity) {
+        if (d.recentActivity.length === 0) {
+          body.innerHTML = '';
+          if (empty) empty.style.display = 'block';
+        } else {
+          if (empty) empty.style.display = 'none';
+          body.innerHTML = d.recentActivity.slice(0,10).map((log, i) => {
+            const date = new Date(log.tanggal).toLocaleDateString('id-ID',{year:'numeric',month:'2-digit',day:'2-digit'});
+            const jumlah = [];
+            if(parseInt(log.berkas)) jumlah.push(log.berkas+' Berkas');
+            if(parseInt(log.buku)) jumlah.push(log.buku+' Buku');
+            if(parseInt(log.bundle)) jumlah.push(log.bundle+' Bundle');
+            return `<tr style="animation: fadeInUp 0.3s ease ${i*0.05}s both;">
+              <td>${date}</td><td>${log.jenis||'-'}</td><td>${log.keterangan||'-'}</td>
+              <td>${jumlah.join(', ')||'-'}</td><td><span class="status-badge selesai">Selesai</span></td></tr>`;
+          }).join('');
+        }
+      }
+
+      // Render charts from API aggregated data
+      renderWeeklyChartFromAPI(d.weeklyProgress || []);
+      renderDonutChartFromAPI(d.workDistribution || []);
+    };
+
+    // Override refreshProfile to use API
+    window.refreshProfile = async function() {
+      const user = AuthAPI.getCurrentUser();
+      if (!user) return;
+      const initials = user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+      const av1 = document.getElementById('profileAvatar');
+      const av2 = document.getElementById('topbarAvatar');
+      if(av1) av1.textContent = initials;
+      if(av2) av2.textContent = initials;
+      const nameEl = document.getElementById('profileName');
+      if(nameEl) nameEl.textContent = user.name;
+      const usernameEl = document.getElementById('profUsername');
+      const emailEl = document.getElementById('profEmail');
+      const instansiEl = document.getElementById('profInstansi');
+      if(usernameEl) usernameEl.value = user.name.toLowerCase().replace(/\s/g,'');
+      if(emailEl) emailEl.value = user.email;
+      if(instansiEl) instansiEl.value = user.instansi || '';
+
+      const statsRes = await WorkLogAPI.getMyStats();
+      if(statsRes && statsRes.success) {
+        const s = statsRes.data;
+        const pb = document.getElementById('profBerkas');
+        const pbu = document.getElementById('profBuku');
+        const pbd = document.getElementById('profBundle');
+        if(pb) pb.textContent = (s.berkas||0).toLocaleString();
+        if(pbu) pbu.textContent = (s.buku||0).toLocaleString();
+        if(pbd) pbd.textContent = (s.bundle||0).toLocaleString();
+      }
+    };
+
+    // Override saveProfile to use API
+    window.saveProfile = async function() {
+      const data = {};
+      const emailEl = document.getElementById('profEmail');
+      const instansiEl = document.getElementById('profInstansi');
+      if(emailEl) data.email = emailEl.value;
+      if(instansiEl) data.instansi = instansiEl.value;
+
+      const res = await AuthAPI.updateProfile(data);
+      if(res && res.success) {
+        showToast('Profil berhasil diperbarui!', 'success');
+      } else {
+        showToast(res ? res.message : 'Gagal update', 'error');
+      }
+    };
+
+    // Override logout
+    window.logout = function() {
+      showToast('Berhasil keluar. Sampai jumpa!', 'success');
+      setTimeout(() => AuthAPI.logout(), 800);
+    };
+
+    // ===== ABSENSI: Camera Scanner + Manual Token =====
+    let html5QrScanner = null;
+    let isScannerRunning = false;
+
+    function switchAbsensiTab(tab) {
+      const cameraTab = document.getElementById('cameraTab');
+      const manualTab = document.getElementById('manualTab');
+      const btnCamera = document.getElementById('tabScanCamera');
+      const btnManual = document.getElementById('tabManualToken');
+
+      if (tab === 'camera') {
+        cameraTab.style.display = 'block';
+        manualTab.style.display = 'none';
+        btnCamera.className = 'btn btn-primary';
+        btnCamera.style.background = '';
+        btnManual.className = 'btn-outline';
+        btnManual.style.background = 'transparent';
+      } else {
+        cameraTab.style.display = 'none';
+        manualTab.style.display = 'block';
+        btnManual.className = 'btn btn-primary';
+        btnManual.style.background = '';
+        btnCamera.className = 'btn-outline';
+        btnCamera.style.background = 'transparent';
+        // Stop camera if running
+        stopCameraScan();
+      }
+    }
+
+    function startCameraScan() {
+      if (isScannerRunning) return;
+
+      const container = document.getElementById('qrScannerContainer');
+      const statusEl = document.getElementById('scanStatus');
+      const btnStart = document.getElementById('btnStartScan');
+      const btnStop = document.getElementById('btnStopScan');
+
+      if (typeof Html5Qrcode === 'undefined') {
+        showToast('Library QR scanner gagal dimuat. Gunakan input manual.', 'error');
+        switchAbsensiTab('manual');
+        return;
+      }
+
+      statusEl.textContent = 'Mengaktifkan kamera...';
+      statusEl.style.color = 'var(--primary-600)';
+
+      html5QrScanner = new Html5Qrcode('qrScannerContainer');
+
+      html5QrScanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1 },
+        async (decodedText) => {
+          // QR Scanned successfully
+          stopCameraScan();
+          statusEl.textContent = 'QR Code terdeteksi! Memproses...';
+          statusEl.style.color = 'var(--accent-green)';
+
+          // Parse the QR data — could be URL or JSON
+          let token = '';
+          try {
+            // Check if it's a URL with token param
+            if (decodedText.includes('absensi-scan.html?token=')) {
+              const url = new URL(decodedText);
+              token = url.searchParams.get('token') || '';
+            } else {
+              // Try JSON format
+              const parsed = JSON.parse(decodedText);
+              token = parsed.token || '';
+            }
+          } catch(e) {
+            // Fallback: use raw text as token
+            token = decodedText.trim();
+          }
+
+          if (!token) {
+            showToast('QR Code tidak valid.', 'error');
+            statusEl.textContent = 'QR Code tidak valid. Coba lagi.';
+            statusEl.style.color = '#ef4444';
+            return;
+          }
+
+          // Submit to API
+          await submitAbsensi(token);
+        },
+        (errorMessage) => {
+          // Scan error (continuous) — ignore, camera still running
+        }
+      ).then(() => {
+        isScannerRunning = true;
+        btnStart.style.display = 'none';
+        btnStop.style.display = 'inline-flex';
+        statusEl.textContent = 'Arahkan kamera ke QR Code...';
+        statusEl.style.color = 'var(--primary-600)';
+      }).catch((err) => {
+        console.error('Camera error:', err);
+        statusEl.textContent = 'Gagal akses kamera. Pastikan izin kamera diberikan, atau gunakan input manual.';
+        statusEl.style.color = '#ef4444';
+        showToast('Gagal akses kamera. Coba input manual.', 'error');
+      });
+    }
+
+    function stopCameraScan() {
+      const btnStart = document.getElementById('btnStartScan');
+      const btnStop = document.getElementById('btnStopScan');
+      const statusEl = document.getElementById('scanStatus');
+
+      if (html5QrScanner && isScannerRunning) {
+        html5QrScanner.stop().then(() => {
+          html5QrScanner.clear();
+          isScannerRunning = false;
+        }).catch(() => {
+          isScannerRunning = false;
+        });
+      }
+      if (btnStart) btnStart.style.display = 'inline-flex';
+      if (btnStop) btnStop.style.display = 'none';
+      if (statusEl) { statusEl.textContent = 'Klik tombol untuk mulai scan'; statusEl.style.color = 'var(--gray-400)'; }
+    }
+
+    async function submitManualToken() {
+      const tokenInput = document.getElementById('qrTokenInput');
+      const token = (tokenInput?.value || '').trim();
+      if (!token) { showToast('Masukkan token QR Code terlebih dahulu.', 'error'); return; }
+      await submitAbsensi(token);
+      if (tokenInput) tokenInput.value = '';
+    }
+
+    async function submitAbsensi(token) {
+      const statusEl = document.getElementById('scanStatus');
+      
+      const res = await AttendanceAPI.scan(token);
+      if (res && res.success) {
+        showToast('Absensi berhasil! ✅', 'success');
+        if (statusEl) { statusEl.textContent = '✅ Absensi berhasil tercatat!'; statusEl.style.color = 'var(--accent-green)'; }
+        refreshAbsensiFromAPI();
+      } else {
+        const msg = res ? res.message : 'Gagal absensi.';
+        showToast(msg, 'error');
+        if (statusEl) { statusEl.textContent = '❌ ' + msg; statusEl.style.color = '#ef4444'; }
+      }
+    }
+
+    // Keep old generateQR as alias for backward compat
+    window.generateQR = function() { startCameraScan(); };
+
+    // Override refreshAbsensi to use API
+    window.refreshAbsensi = refreshAbsensiFromAPI;
+    async function refreshAbsensiFromAPI() {
+      // Set date
+      const now = new Date();
+      const el = document.getElementById('absensiDate');
+      if (el) el.textContent = now.toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+      // Load attendance history from API
+      const res = await AttendanceAPI.getAll();
+      if (!res || !res.success) return;
+      const records = res.data || [];
+
+      // Last attendance time
+      const timeEl = document.getElementById('lastAbsensiTime');
+      if (timeEl) {
+        if (records.length > 0 && records[0].jamMasuk) {
+          timeEl.textContent = records[0].jamMasuk + ' WIB';
+        } else {
+          timeEl.textContent = '--:-- WIB';
+        }
+      }
+
+      // Render history table
+      const body = document.getElementById('absensiHistoryBody');
+      if (body) {
+        if (records.length === 0) {
+          body.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--gray-400)">Belum ada riwayat absensi</td></tr>';
+        } else {
+          body.innerHTML = records.slice(0,7).map(r => {
+            const dateStr = new Date(r.tanggal).toLocaleDateString('id-ID',{year:'numeric',month:'2-digit',day:'2-digit'});
+            const statusClass = r.status==='Hadir'?'selesai':r.status==='Izin'?'pending':'alpha';
+            return `<tr>
+              <td>${dateStr}</td>
+              <td>${r.jamMasuk || '-'}</td>
+              <td><span class="status-badge ${statusClass}">${r.status}</span></td>
+            </tr>`;
+          }).join('');
+        }
+      }
+    }
+
+    // Stop scanner when switching pages
+    const origSwitchPageForScanner = window.switchPage;
+    window.switchPage = function(page) {
+      if (page !== 'absensi') stopCameraScan();
+      if (origSwitchPageForScanner) origSwitchPageForScanner(page);
+    };
+
+    // ===== CHART OVERRIDES (use API aggregated data) =====
+    function renderWeeklyChartFromAPI(weeklyProgress) {
+      const canvas = document.getElementById('weeklyChart');
+      if (!canvas) return;
+
+      if (typeof weeklyChartInstance !== 'undefined' && weeklyChartInstance) weeklyChartInstance.destroy();
+
+      const labels = weeklyProgress.map(w => {
+        const dt = new Date(w._id);
+        return dt.toLocaleDateString('id-ID',{weekday:'short'});
+      });
+
+      window.weeklyChartInstance = new Chart(canvas, {
+        type:'bar',
+        data:{
+          labels: labels.length ? labels : ['Sen','Sel','Rab','Kam','Jum'],
+          datasets:[
+            {label:'Berkas', data:weeklyProgress.map(w=>w.berkas||0), backgroundColor:'rgba(77,184,232,0.85)', borderRadius:6, barPercentage:0.65},
+            {label:'Buku', data:weeklyProgress.map(w=>w.buku||0), backgroundColor:'rgba(255,214,0,0.85)', borderRadius:6, barPercentage:0.65},
+            {label:'Bundle', data:weeklyProgress.map(w=>w.bundle||0), backgroundColor:'rgba(34,197,94,0.85)', borderRadius:6, barPercentage:0.65}
+          ]
+        },
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          animation:{duration:1200,easing:'easeOutQuart'},
+          plugins:{legend:{display:true,position:'bottom',labels:{color:'#64748b',font:{size:11},usePointStyle:true,pointStyle:'circle',boxWidth:8}},tooltip:{backgroundColor:'#fff',titleColor:'#1e293b',bodyColor:'#64748b',borderColor:'#e2e8f0',borderWidth:1,cornerRadius:10,padding:12}},
+          scales:{x:{grid:{display:false},ticks:{color:'#94a3b8',font:{weight:'600'}}},y:{grid:{color:'rgba(226,232,240,0.5)',drawBorder:false},ticks:{color:'#94a3b8'},beginAtZero:true}}
+        }
+      });
+    }
+
+    function renderDonutChartFromAPI(workDistribution) {
+      const canvas = document.getElementById('donutChart');
+      if (!canvas) return;
+
+      if (typeof donutChartInstance !== 'undefined' && donutChartInstance) donutChartInstance.destroy();
+
+      const colors = ['#4db8e8','#0a6599','#ffd600','#ff4757','#8b5cf6','#22c55e','#fb923c'];
+      const labels = workDistribution.map(w => w._id || 'Lainnya');
+      const data = workDistribution.map(w => w.count);
+
+      window.donutChartInstance = new Chart(canvas, {
+        type:'doughnut',
+        data:{
+          labels: labels.length ? labels : ['Belum ada data'],
+          datasets:[{data:data.length?data:[1], backgroundColor:data.length?colors.slice(0,labels.length):['#e2e8f0'], borderWidth:3, borderColor:'#fff', hoverOffset:8}]
+        },
+        options:{
+          responsive:true, maintainAspectRatio:false, cutout:'65%',
+          animation:{animateRotate:true,duration:1500,easing:'easeOutQuart'},
+          plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#1e293b',bodyColor:'#64748b',borderColor:'#e2e8f0',borderWidth:1,cornerRadius:10,padding:12}}
+        }
+      });
+    }
+
+    // Toast function
+    function showToast(msg, type='info') {
+      const c = document.getElementById('toastContainer');
+      if(!c) return;
+      const icons = {
+        success: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
+        error: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>',
+        info: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'
+      };
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.innerHTML = `<div class="toast-icon">${icons[type]||icons.info}</div><span class="toast-msg">${msg}</span>`;
+      c.appendChild(t);
+      setTimeout(() => t.remove(), 3500);
+    }
+
+    // Close popup when clicking outside
+    document.addEventListener('click', function(e) {
+      const popup = document.getElementById('profilePopup');
+      const avatar = document.getElementById('topbarAvatar');
+      if (popup && avatar && !popup.contains(e.target) && e.target !== avatar) {
+        popup.classList.remove('active');
+      }
+    });
+
+    // Override switchPage to close popup
+    const originalSwitchPage = window.switchPage;
+    window.switchPage = function(page) {
+      const popup = document.getElementById('profilePopup');
+      if(popup) popup.classList.remove('active');
+      if(originalSwitchPage) originalSwitchPage(page);
+      // Reload pending data when switching to input-pekerjaan
+      if(page === 'input-pekerjaan') loadPendingData();
+      if(page === 'laporan-kendala') refreshKendalaFromAPI();
+    };
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUserProfileData();
+      loadPendingData();
+
+      // Set today's date as default
+      const today = new Date().toISOString().split('T')[0];
+      const dateInput = document.getElementById('inputTanggal');
+      if(dateInput) dateInput.value = today;
+    });
+  </script>
+</body>
+</html>
