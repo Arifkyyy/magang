@@ -251,19 +251,27 @@
     }
 
     async function generateQR() {
+      // Save current scanned count BEFORE generating
+      const currentScannedCount = document.getElementById('scannedCount').textContent;
+      
       const res = await QRCodeAPI.generate();
       if (res && res.success) {
         showToast('QR Code berhasil di-generate!', 'success');
+        
         const preview = document.getElementById('qrPreview');
         preview.innerHTML = '';
         preview.classList.add('has-qr');
-        // Generate URL-based QR
         const scanUrl = window.location.origin + '/absensi-scan.html?token=' + res.data.token;
         if (typeof QRCode !== 'undefined') {
           new QRCode(preview, {text:scanUrl, width:220, height:220, colorDark:'#0a6599', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M});
         }
-        // Refresh status
         await loadTodayQR();
+        
+        // Restore scanned count AFTER loadTodayQR overwrites it
+        const qrRes = await QRCodeAPI.getToday();
+        const serverCount = (qrRes && qrRes.success && qrRes.data && qrRes.data.scannedBy) ? qrRes.data.scannedBy.length : 0;
+        document.getElementById('scannedCount').textContent = Math.max(serverCount, parseInt(currentScannedCount) || 0);
+        
         await loadQRHistory();
       } else {
         showToast(res ? res.message : 'Gagal generate QR Code.', 'error');
